@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../../Context/AuthProvider";
 
 const SignUp = () => {
+  const { createUser, updateUser, googleSignIn } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -10,7 +12,41 @@ const SignUp = () => {
   } = useForm();
 
   const handleSignUp = (data) => {
+    const image = data.img[0];
+    const formData = new FormData();
+    formData.append("image", image);
+    const imageKey = process.env.REACT_APP_REACT_APP_ImageBB_Api_key;
+    const imageUrl = `https://api.imgbb.com/1/upload?key=${imageKey}`;
+    fetch(imageUrl, {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((imageData) => {
+        createUser(data.email, data.password)
+          .then((result) => {
+            const user = result.user;
+            console.log(user);
+
+            const userInfo = {
+              displayName: data.username,
+              photoURL: imageData.data.display_url,
+            };
+            updateUser(userInfo);
+          })
+          .catch((error) => console.error(error));
+      });
+
     console.log(data);
+  };
+
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+      })
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -21,8 +57,7 @@ const SignUp = () => {
         </h1>
 
         <form onSubmit={handleSubmit(handleSignUp)} className="mt-6">
-
-        <div>
+          <div>
             <label
               htmlFor="username"
               className="block text-sm text-gray-800 dark:text-gray-200"
@@ -31,7 +66,7 @@ const SignUp = () => {
             </label>
             <input
               type="text"
-              name="text"
+              name="username"
               {...register("username", { required: "User Name is required" })}
               className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
               placeholder="username"
@@ -41,6 +76,19 @@ const SignUp = () => {
             <p className="text-red-500">{errors.username.message}</p>
           )}
 
+          <label
+            htmlFor="dropzone-file"
+            className="flex items-center px-3 py-3 mx-auto mt-6 text-center bg-white border-2 border-dashed rounded-md cursor-pointer"
+          >
+            <input
+              type="file"
+              name="image"
+              className="bg-white rounded-xl"
+              {...register("img", { required: "img is required" })}
+              id=""
+            />
+          </label>
+          {errors.img && <p className="text-red-500">{errors.img.message}</p>}
 
           <div>
             <label
@@ -63,7 +111,7 @@ const SignUp = () => {
           )}
 
           <div className="mt-4">
-          <label
+            <label
               htmlFor="password"
               className="block text-sm text-gray-800 dark:text-gray-200"
             >
@@ -101,6 +149,7 @@ const SignUp = () => {
 
         <div className="flex items-center mt-6 -mx-2">
           <button
+            onClick={handleGoogleSignIn}
             type="button"
             className="flex items-center justify-center w-full px-6 py-2 mx-2 text-sm font-medium text-white transition-colors duration-300 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:bg-blue-400 focus:outline-none"
           >

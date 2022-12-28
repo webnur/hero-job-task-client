@@ -1,13 +1,32 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { AuthContext } from "../../Context/AuthProvider";
 
 const Login = () => {
+
+    const {signIn,  googleSignIn} = useContext(AuthContext)
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const handleLogin = data => {
         console.log(data)
+        signIn(data.email, data.password)
+        .then(result => {
+            const user = result.user;
+            console.log(user)
+        })
+        .catch(e => console.error(e))
+    }
+
+    const handleGoogleSignIn = () => {
+        googleSignIn()
+            .then(result => {
+                const user = result.user;
+                console.log(user)
+                
+            })
+            .catch(error => console.error(error))
     }
 
   return (
@@ -85,7 +104,7 @@ const Login = () => {
 
         <div className="flex items-center mt-6 -mx-2">
           <button
-          
+          onClick={handleGoogleSignIn}
             type="button"
             className="flex items-center justify-center w-full px-6 py-2 mx-2 text-sm font-medium text-white transition-colors duration-300 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:bg-blue-400 focus:outline-none"
           >
