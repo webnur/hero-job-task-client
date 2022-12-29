@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { FaUserAlt } from "react-icons/fa";
+import { AuthContext } from "../../../Context/AuthProvider";
 
 const SinglePost = ({ post }) => {
-  const { register, handleSubmit } = useForm();
+    const {user} = useContext(AuthContext)
+  const { register, handleSubmit, reset } = useForm();
 
   const handleComment = data => {
     console.log(data.comment)
     const commentData = {
-        commentText: data.comment
+        commentText: data.comment,
+        authorName: user.displayName,
+        authorImage: user.photoURL,
+        postId: post._id
     }
     fetch('http://localhost:5000/comments', {
         method: "POST",
@@ -16,6 +22,13 @@ const SinglePost = ({ post }) => {
             "content-type": "application/json",
           },
           body: JSON.stringify(commentData)
+    })
+    .then(res => res.json())
+    .then(data => {
+        reset()
+        if(data.acknowledged){
+            toast.success('comment added')
+        }
     })
   }
 
@@ -31,12 +44,6 @@ const SinglePost = ({ post }) => {
           :
           <FaUserAlt className="w-10 h-10 overflow-hidden border-2 border-gray-400 rounded-full p-2"></FaUserAlt>
         }
-        {/* <img
-          alt=""
-          src={post.authorUrl}
-          className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500"
-        />
-        <FaUserAlt></FaUserAlt> */}
         <div className="flex flex-col space-y-1 items-center justify-center">
           <a
             rel="noopener noreferrer"
