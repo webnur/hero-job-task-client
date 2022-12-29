@@ -1,9 +1,10 @@
 import React from "react";
+import CreatePost from "../CreatePost/CreatePost";
 
 const Home = () => {
   return (
-    <div>
-      <h2 className="text-2xl">home page</h2>
+    <div className="mt-4">
+      <CreatePost></CreatePost>
       <div className="rounded-md shadow-md sm:w-96 dark:bg-gray-900 dark:text-gray-100">
         <div className="flex items-center justify-between p-3">
           <div className="flex items-center space-x-2">
