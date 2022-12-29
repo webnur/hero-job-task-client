@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { FaUserAlt } from "react-icons/fa";
 
 const SinglePost = ({ post }) => {
   const { register, handleSubmit } = useForm();
@@ -21,18 +22,28 @@ const SinglePost = ({ post }) => {
   return (
     <div className="md:flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-md dark:bg-gray-900 dark:text-gray-100">
       <div className="flex space-x-4">
-        <img
+        {
+            post.authorUrl ? <img
+            alt=""
+            src={post.authorUrl}
+            className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500"
+          />
+          :
+          <FaUserAlt className="w-10 h-10 overflow-hidden border-2 border-gray-400 rounded-full p-2"></FaUserAlt>
+        }
+        {/* <img
           alt=""
-          src="https://source.unsplash.com/100x100/?portrait"
+          src={post.authorUrl}
           className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500"
         />
+        <FaUserAlt></FaUserAlt> */}
         <div className="flex flex-col space-y-1 items-center justify-center">
           <a
             rel="noopener noreferrer"
             href="/"
             className="text-sm font-semibold"
           >
-            Leroy Jenkins
+            {post.authorName ? post.authorName : 'unknown'}
           </a>
         </div>
       </div>

@@ -6,8 +6,8 @@ import { AuthContext } from "../../../Context/AuthProvider";
 
 const Navbar = () => {
   //   const { user, logOut } = useContext(AuthContext);
-  const {logOut} = useContext(AuthContext);
-  
+  const { logOut, user } = useContext(AuthContext);
+
   const handleSignOut = () => {
     logOut()
       .then(() => {})
@@ -84,12 +84,11 @@ const Navbar = () => {
                 SignUp
               </Link>
               <button
-              onClick={handleSignOut}
+                onClick={handleSignOut}
                 className="px-3 py-2 mx-3 mt-2 text-gray-700 transition-colors duration-300 transform rounded-md lg:mt-0 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 logOut
               </button>
-              
             </div>
             <div className="flex items-center mt-4 lg:mt-0">
               <button
@@ -103,10 +102,20 @@ const Navbar = () => {
                 aria-label="toggle profile dropdown"
               >
                 <div
-                  title=""
+                  title={user?.displayName}
                   className="w-10 h-10 overflow-hidden border-2 border-gray-400 rounded-full"
                 >
-                  <FaUser className="text-2xl text-center mx-auto pt-2" />
+                  {
+                    user?.photoURL ? (
+                      <img
+                        src={user?.photoURL}
+                        className="object-cover w-full h-full"
+                        alt="avatar"
+                      />
+                    ) : (
+                      <FaUser className="text-2xl text-center mx-auto pt-2" />
+                    )
+                  }
                 </div>
               </button>
             </div>

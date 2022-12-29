@@ -1,11 +1,15 @@
-import React from "react";
+import moment from "moment";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { AuthContext } from "../../../Context/AuthProvider";
 
 const CreatePost = () => {
+    const {user} = useContext(AuthContext)
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -25,9 +29,13 @@ const CreatePost = () => {
     })
       .then((res) => res.json())
       .then((imageData) => {
+        const time = moment().format('MMMM Do YYYY, h:mm:ss a');
         const postData = {
           content: data.post,
           image: imageData.data.display_url,
+          authorName: user?.displayName,
+          authorUrl: user?.photoURL,
+          time
         };
 
         // save post data to database
@@ -40,10 +48,11 @@ const CreatePost = () => {
         })
           .then((res) => res.json())
           .then((data) => {
+            reset()
             console.log(data);
             if(data.acknowledged){
                 toast.success('post successfully added')
-            }
+            }            
           });
       });
   };
