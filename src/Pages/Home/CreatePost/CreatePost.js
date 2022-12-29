@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
 const CreatePost = () => {
   const {
@@ -40,6 +41,9 @@ const CreatePost = () => {
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
+            if(data.acknowledged){
+                toast.success('post successfully added')
+            }
           });
       });
   };

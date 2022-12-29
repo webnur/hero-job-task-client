@@ -1,8 +1,25 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 
-const SinglePost = ({post}) => {
+const SinglePost = ({ post }) => {
+  const { register, handleSubmit } = useForm();
+
+  const handleComment = data => {
+    console.log(data.comment)
+    const commentData = {
+        commentText: data.comment
+    }
+    fetch('http://localhost:5000/comments', {
+        method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(commentData)
+    })
+  }
+
   return (
-    <div className="flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-md dark:bg-gray-900 dark:text-gray-100">
+    <div className="md:flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-md dark:bg-gray-900 dark:text-gray-100">
       <div className="flex space-x-4">
         <img
           alt=""
@@ -25,9 +42,7 @@ const SinglePost = ({post}) => {
           alt=""
           className="object-cover w-full mb-4 h-60 sm:h-96 dark:bg-gray-500"
         />
-        <p className="text-sm dark:text-gray-400">
-          {post.content}
-        </p>
+        <p className="text-sm dark:text-gray-400">{post.content}</p>
       </div>
 
       <div className="p-3">
@@ -49,11 +64,12 @@ const SinglePost = ({post}) => {
           </div>
         </div>
         <div className="space-y-3 mt-2">
-          <form action="">
+          <form action="" onSubmit={handleSubmit(handleComment)}>
             <textarea
               placeholder="Add a comment..."
-              name=""
+              name="comment"
               id=""
+              {...register("comment", { required: "User Name is required" })}
               cols="50"
               className="rounded-lg w-full py-0.5 p-2 dark:bg-transparent border-none text-sm pl-0 dark:text-gray-100"
               rows="2"

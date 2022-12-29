@@ -8,16 +8,16 @@ const Layout = () => {
   return (
     <div>
       <Navbar></Navbar>
-      <div className="grid grid-cols-4 gap-4 container mx-auto">
-        <div className="col-1">
+      <div className="md:grid md:grid-cols-4 gap-4 container mx-auto">
+        <div className="md:col-1 md:block lg:block hidden">
           <LeftSidebar></LeftSidebar>
         </div>
 
-        <div className="col-span-2 mx-auto">
+        <div className="md:col-span-2 mx-auto">
           <Outlet></Outlet>
         </div>
 
-        <div className=" col-1">
+        <div className=" md:col-1  md:block lg:block hidden">
         <RightSidebar></RightSidebar>
         </div>
       </div>
