@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -5,52 +6,66 @@ import { FaUserAlt } from "react-icons/fa";
 import { AuthContext } from "../../../Context/AuthProvider";
 
 const SinglePost = ({ post }) => {
-    const {user} = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
   const { register, handleSubmit, reset } = useForm();
 
-  const handleComment = data => {
-    console.log(data.comment)
-    const commentData = {
-        commentText: data.comment,
-        authorName: user.displayName,
-        authorImage: user.photoURL,
-        postId: post._id
+  //comment data
+  const {data: comments = []} = useQuery({
+    queryKey: ['comments'],
+    queryFn: async () => {
+        const res = await fetch('http://localhost:5000/comments');
+        const data = await res.json();
+        return data
     }
-    fetch('http://localhost:5000/comments', {
-        method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(commentData)
+  })
+
+  console.log(comments)
+
+  const allComments = comments.filter(com => com.postId === post._id)
+
+  const handleComment = (data) => {
+    console.log(data.comment);
+    const commentData = {
+      commentText: data.comment,
+      authorName: user.displayName,
+      authorImage: user.photoURL,
+      postId: post._id,
+    };
+    fetch("http://localhost:5000/comments", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(commentData),
     })
-    .then(res => res.json())
-    .then(data => {
-        reset()
-        if(data.acknowledged){
-            toast.success('comment added')
+      .then((res) => res.json())
+      .then((data) => {
+        reset();
+        if (data.acknowledged) {
+          toast.success("comment added");
         }
-    })
-  }
+      });
+  };
 
   return (
     <div className="md:flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-md dark:bg-gray-900 dark:text-gray-100">
       <div className="flex space-x-4">
-        {
-            post.authorUrl ? <img
+        {post.authorUrl ? (
+          <img
             alt=""
             src={post.authorUrl}
             className="object-cover w-12 h-12 rounded-full shadow dark:bg-gray-500"
           />
-          :
+        ) : (
           <FaUserAlt className="w-10 h-10 overflow-hidden border-2 border-gray-400 rounded-full p-2"></FaUserAlt>
-        }
+        )}
         <div className="flex flex-col space-y-1 items-center justify-center">
           <a
             rel="noopener noreferrer"
             href="/"
             className="text-sm font-semibold"
           >
-            {post.authorName ? post.authorName : 'unknown'}
+            {post.authorName ? post.authorName : "unknown"}
           </a>
         </div>
       </div>
@@ -99,6 +114,12 @@ const SinglePost = ({ post }) => {
               value="Add Comment"
             />
           </form>
+          <div>
+            <h2 className="text-2xl">display comment</h2>
+            {
+                allComments.map(comment => <p>{comment.commentText}</p>)
+            }
+          </div>
         </div>
       </div>
     </div>
