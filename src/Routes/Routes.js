@@ -6,6 +6,7 @@ import SignUp from "../Pages/SignUp/SignUp";
 import Media from "../Pages/Media/Media";
 import About from "../Pages/About/About";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -15,11 +16,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home></Home>,
+        element: <PrivateRoute><Home></Home></PrivateRoute>,
       },
       {
         path: "/media",
-        element: <Media></Media>,
+        element: <PrivateRoute><Media></Media></PrivateRoute>,
       },
     ],
   },
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/about',
-    element: <About></About>
+    element: <PrivateRoute><About></About></PrivateRoute>
   }
 ]);
 
