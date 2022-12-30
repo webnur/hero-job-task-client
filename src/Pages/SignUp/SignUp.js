@@ -31,13 +31,12 @@ const SignUp = () => {
           .then((result) => {
             const user = result.user;
             console.log(user);
-
+            navigate(from, { replace: true })
             const userInfo = {
               displayName: data.username,
               photoURL: imageData.data.display_url,
             };
-            updateUser(userInfo);
-            navigate(from, { replace: true })
+            updateUser(userInfo);           
           })
           .catch((error) => console.error(error));
       });
@@ -50,6 +49,7 @@ const SignUp = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
+        navigate(from, { replace: true })
       })
       .catch((error) => console.error(error));
   };
@@ -60,7 +60,7 @@ const SignUp = () => {
       <section className="signup-bg py-5">
         <div className="sm:w-full mb-5 max-w-sm p-6 m-auto mx-auto bg-white rounded-md shadow-md dark:bg-gray-800">
           <h1 className="text-3xl font-semibold text-center text-gray-700 dark:text-white">
-            Log In
+           Sign Up
           </h1>
 
           <form onSubmit={handleSubmit(handleSignUp)} className="mt-6">
