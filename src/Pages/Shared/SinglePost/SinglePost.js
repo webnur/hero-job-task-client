@@ -14,7 +14,7 @@ const SinglePost = ({ post }) => {
   const { data: comments = [], refetch } = useQuery({
     queryKey: ["comments"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:5000/comments");
+      const res = await fetch("https://hero-job-task-server-zeta.vercel.app/comments");
       const data = await res.json();
       return data;
     },
@@ -29,7 +29,7 @@ const SinglePost = ({ post }) => {
       authorImage: user.photoURL,
       postId: post._id,
     };
-    fetch("http://localhost:5000/comments", {
+    fetch("https://hero-job-task-server-zeta.vercel.app/comments", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -63,7 +63,7 @@ const SinglePost = ({ post }) => {
         ) : (
           <FaUserAlt className="w-10 h-10 overflow-hidden border-2 border-gray-400 rounded-full p-2"></FaUserAlt>
         )}
-        <div className="flex flex-col space-y-1 items-center justify-center">
+        <div className="flex flex-col space-y-1  justify-center">
           <a
             rel="noopener noreferrer"
             href="/"
@@ -71,6 +71,7 @@ const SinglePost = ({ post }) => {
           >
             {post.authorName ? post.authorName : "unknown"}
           </a>
+          <p>{post.time}</p>
         </div>
       </div>
       <div>

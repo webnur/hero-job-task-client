@@ -9,7 +9,7 @@ const Home = () => {
   const { data: posts = [], refetch } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
-      const res = await fetch("http://localhost:5000/posts");
+      const res = await fetch("https://hero-job-task-server-zeta.vercel.app/posts");
       const data = await res.json();
       return data;
     },   

@@ -70,7 +70,7 @@ const SignUp = () => {
   // save user to database
 
   const saveUser = (dbUser) => {
-    fetch("http://localhost:5000/users", {
+    fetch("https://hero-job-task-server-zeta.vercel.app//users", {
       method: "POST",
       headers: {
         "content-type": "application/json",

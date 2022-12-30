@@ -39,7 +39,7 @@ const CreatePost = () => {
         };
 
         // save post data to database
-        fetch("http://localhost:5000/posts", {
+        fetch("https://hero-job-task-server-zeta.vercel.app/posts", {
           method: "POST",
           headers: {
             "content-type": "application/json",
