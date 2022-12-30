@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthProvider";
 import Navbar from "../Shared/Navbar/Navbar";
 
 const SignUp = () => {
   const { createUser, updateUser, googleSignIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const {
     register,
     handleSubmit,
@@ -34,6 +37,7 @@ const SignUp = () => {
               photoURL: imageData.data.display_url,
             };
             updateUser(userInfo);
+            navigate(from, { replace: true })
           })
           .catch((error) => console.error(error));
       });
@@ -164,16 +168,6 @@ const SignUp = () => {
             </button>
           </div>
 
-          <p className="mt-8 text-xs font-light text-center text-gray-400">
-            {" "}
-            Don't have an account?
-            <Link
-              to="/signup"
-              className="font-medium text-gray-700 dark:text-gray-200 hover:underline"
-            >
-              Create One
-            </Link>
-          </p>
         </div>
       </section>
     </div>

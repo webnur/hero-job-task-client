@@ -1,7 +1,6 @@
 import React from "react";
 
 const Comment = ({ comment }) => {
-  console.log(comment);
   const { authorImage, authorName, commentText } = comment;
   return (
     <div className="flex items-center p-2 space-x-4">

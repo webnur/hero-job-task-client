@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../Context/AuthProvider";
 import Navbar from "../Shared/Navbar/Navbar";
 
 const Login = () => {
   const { signIn, googleSignIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const {
     register,
@@ -19,6 +22,7 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
+        navigate(from, { replace: true })
       })
       .catch((e) => console.error(e));
   };
@@ -70,12 +74,7 @@ const Login = () => {
                 >
                   Password
                 </label>
-                <Link
-                  to=""
-                  className="text-xs text-gray-600 dark:text-gray-400 hover:underline"
-                >
-                  Forget Password?
-                </Link>
+    
               </div>
 
               <input

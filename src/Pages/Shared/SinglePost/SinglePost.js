@@ -10,6 +10,16 @@ const SinglePost = ({ post }) => {
   const { user } = useContext(AuthContext);
   const { register, handleSubmit, reset } = useForm();
 
+  //get comment data
+  const { data: comments = [], refetch } = useQuery({
+    queryKey: ["comments"],
+    queryFn: async () => {
+      const res = await fetch("http://localhost:5000/comments");
+      const data = await res.json();
+      return data;
+    },
+  });
+
   //send comment data
   const handleComment = (data) => {
     console.log(data.comment);
@@ -33,19 +43,13 @@ const SinglePost = ({ post }) => {
           toast.success("comment added");
         }
       });
+    refetch();
   };
 
-  //get comment data
-  const { data: comments = [] } = useQuery({
-    queryKey: ["comments"],
-    queryFn: async () => {
-      const res = await fetch("http://localhost:5000/comments");
-      const data = await res.json();
-      return data;
-    },
-  });
-
   const allComments = comments.filter((com) => com.postId === post._id);
+
+  // comment slice
+  const sliceComment = allComments.slice(0, 3);
 
   return (
     <div className="md:flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-md dark:bg-gray-900 dark:text-gray-100">
@@ -116,7 +120,7 @@ const SinglePost = ({ post }) => {
           </form>
           <div>
             <p>comments:</p>
-            {allComments.map((comment) => (
+            {sliceComment.map((comment) => (
               <Comment key={comment._id} comment={comment}></Comment>
             ))}
           </div>
