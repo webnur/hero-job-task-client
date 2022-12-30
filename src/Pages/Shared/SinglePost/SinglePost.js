@@ -4,25 +4,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { FaUserAlt } from "react-icons/fa";
 import { AuthContext } from "../../../Context/AuthProvider";
+import Comment from "../Comment/Comment";
 
 const SinglePost = ({ post }) => {
   const { user } = useContext(AuthContext);
   const { register, handleSubmit, reset } = useForm();
 
-  //comment data
-  const {data: comments = []} = useQuery({
-    queryKey: ['comments'],
-    queryFn: async () => {
-        const res = await fetch('http://localhost:5000/comments');
-        const data = await res.json();
-        return data
-    }
-  })
-
-  console.log(comments)
-
-  const allComments = comments.filter(com => com.postId === post._id)
-
+  //send comment data
   const handleComment = (data) => {
     console.log(data.comment);
     const commentData = {
@@ -46,6 +34,18 @@ const SinglePost = ({ post }) => {
         }
       });
   };
+
+  //get comment data
+  const { data: comments = [] } = useQuery({
+    queryKey: ["comments"],
+    queryFn: async () => {
+      const res = await fetch("http://localhost:5000/comments");
+      const data = await res.json();
+      return data;
+    },
+  });
+
+  const allComments = comments.filter((com) => com.postId === post._id);
 
   return (
     <div className="md:flex flex-col max-w-lg p-6 space-y-6 overflow-hidden rounded-lg shadow-md dark:bg-gray-900 dark:text-gray-100">
@@ -115,10 +115,10 @@ const SinglePost = ({ post }) => {
             />
           </form>
           <div>
-            <h2 className="text-2xl">display comment</h2>
-            {
-                allComments.map(comment => <p>{comment.commentText}</p>)
-            }
+            <p>comments:</p>
+            {allComments.map((comment) => (
+              <Comment key={comment._id} comment={comment}></Comment>
+            ))}
           </div>
         </div>
       </div>
