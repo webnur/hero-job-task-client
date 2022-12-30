@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Context/AuthProvider";
 import Navbar from "../Shared/Navbar/Navbar";
@@ -31,12 +32,18 @@ const SignUp = () => {
           .then((result) => {
             const user = result.user;
             console.log(user);
-            navigate(from, { replace: true })
+
             const userInfo = {
               displayName: data.username,
               photoURL: imageData.data.display_url,
             };
-            updateUser(userInfo);           
+            updateUser(userInfo);
+            const emailUser = {
+              name: data.username,
+              email: user.email,
+            };
+            navigate(from, { replace: true });
+            saveUser(emailUser);
           })
           .catch((error) => console.error(error));
       });
@@ -49,9 +56,33 @@ const SignUp = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
-        navigate(from, { replace: true })
+        const googleUser = {
+          name: user.displayName,
+          email: user.email,
+        };
+        saveUser(googleUser);
+
+        navigate(from, { replace: true });
       })
       .catch((error) => console.error(error));
+  };
+
+  // save user to database
+
+  const saveUser = (dbUser) => {
+    fetch("http://localhost:5000/users", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(dbUser),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          toast.success("user info successfully added in database");
+        }
+      });
   };
 
   return (
@@ -60,7 +91,7 @@ const SignUp = () => {
       <section className="signup-bg py-5">
         <div className="sm:w-full mb-5 max-w-sm p-6 m-auto mx-auto bg-white rounded-md shadow-md dark:bg-gray-800">
           <h1 className="text-3xl font-semibold text-center text-gray-700 dark:text-white">
-           Sign Up
+            Sign Up
           </h1>
 
           <form onSubmit={handleSubmit(handleSignUp)} className="mt-6">
@@ -167,7 +198,6 @@ const SignUp = () => {
               <span className="hidden mx-2 sm:inline">Sign in with Google</span>
             </button>
           </div>
-
         </div>
       </section>
     </div>
